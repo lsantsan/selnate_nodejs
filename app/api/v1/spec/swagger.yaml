@@ -1,0 +1,448 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Selnate Api
+  description: This doc describes the apis and how to use them
+basePath: /api/v1
+tags:
+  - name: teachers
+    description: Information about the Teachers service.
+  - name: tests
+    description: Information about the Tests service.
+  - name: essays
+    description: Information about the Essays service.
+schemes:
+  - http
+paths:
+  /teachers:
+    get:
+      tags:
+        - teachers
+      description: Retrieve a list of teacher accounts.
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Teacher'
+    post:
+      tags:
+        - teachers
+      description: Create a new teacher account.
+      parameters:
+        - in: body
+          name: body
+          description: Teacher account information.
+          required: true
+          schema:
+            $ref: '#/definitions/Teacher'
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/Teacher'
+        '400':
+          description: Teacher not created.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+  '/teachers/{username}':
+    get:
+      tags:
+        - teachers
+      description: Retrieve a teacher account based on username.
+      parameters:
+        - in: path
+          name: username
+          description: Teacher's username.
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/Teacher'
+        '404':
+          description: Teacher not found.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+    put:
+      tags:
+        - teachers
+      description: Update a teacher's account based on username.
+      parameters:
+        - in: path
+          name: username
+          description: Teacher's username.
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Teacher account.
+          required: true
+          schema:
+            $ref: '#/definitions/Teacher'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/Teacher'
+        '400':
+          description: Invalid teacher information.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+        '404':
+          description: Teacher not found.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+    delete:
+      tags:
+        - teachers
+      description: Deactivate a teacher account based on username.
+      parameters:
+        - in: path
+          name: username
+          description: Teacher's name.
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+        '404':
+          description: Teacher not found.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+  '/teachers/{username}/tests':
+    get:
+      tags:
+        - teachers
+      description: Retrive a list of the teacher's test based on username.
+      parameters:
+        - in: path
+          name: username
+          description: Teacher's name.
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Test'
+        '404':
+          description: Teacher not found.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+  /tests:
+    get:
+      tags:
+        - tests
+      description: Retrieve all tests.
+      produces:
+        - applicaiton/json
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Test'
+    post:
+      tags:
+        - tests
+      description: Create a new test.
+      parameters:
+        - in: body
+          name: body
+          description: Test information.
+          required: true
+          schema:
+            $ref: '#/definitions/Test'
+      responses:
+        '200':
+          description: Successfull operation
+          schema:
+            $ref: '#/definitions/Test'
+        '400':
+          description: Test not created.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+  '/tests/{code}':
+    get:
+      tags:
+        - tests
+      description: Retrieve a test based on its code.
+      parameters:
+        - in: path
+          name: code
+          description: The test's unique code.
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/Test'
+        '404':
+          description: Test not found.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+    put:
+      tags:
+        - tests
+      description: Update a test's information based on its code.
+      parameters:
+        - in: path
+          name: code
+          description: Test's unique code.
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Test information.
+          required: true
+          schema:
+            $ref: '#/definitions/Test'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/Test'
+        '400':
+          description: Invalid test information.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+        '404':
+          description: Test not found.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+    delete:
+      tags:
+        - tests
+      description: Deactivate a test based on its code.
+      parameters:
+        - in: path
+          name: code
+          description: Test's unique code.
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+        '404':
+          description: Test not found.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+  '/tests/{code}/essays':
+    get:
+      tags:
+        - tests
+      description: Retrieve a list of the test's essays based on the test code.
+      parameters:
+        - in: path
+          name: code
+          description: Test's code.
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Essay'
+        '404':
+          description: Test not found.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+  /essays:
+    post:
+      tags:
+        - essays
+      description: Create a new essay.
+      parameters:
+        - in: body
+          name: body
+          description: Essay information.
+          required: true
+          schema:
+            $ref: '#/definitions/Essay'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: >-
+            Successful operation. Note: the body property won't be returned in
+            the response.
+          schema:
+            $ref: '#/definitions/Essay'
+        '400':
+          description: Essay not created.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+    get:
+      tags:
+        - essays
+      description: >-
+        Retrieve a list of essays based on student name. If test code is
+        provided, it filters the essay list based on the code.
+      parameters:
+        - in: query
+          name: student_name
+          description: Student's name who wrote the essay.
+          required: true
+          type: string
+        - in: query
+          name: test_code
+          description: Test code to which the essay belongs.
+          required: false
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successfull operation.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Essay'
+        '404':
+          description: Student not found; Test Code not found;
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+    put:
+      tags:
+        - essays
+      description: Update essay based on student name and test code.
+      parameters:
+        - in: query
+          name: student_name
+          description: Student's name who wrote the essay.
+          required: true
+          type: string
+        - in: query
+          name: test_code
+          description: Test code to which the essay belongs.
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: >-
+            Successful operation. Note: the body property won't be returned in
+            the response.
+          schema:
+            $ref: '#/definitions/Essay'
+        '400':
+          description: Essay not updated.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+        '404':
+          description: Student not found; Test Code not found;
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+definitions:
+  Teacher:
+    type: object
+    required:
+      - firstName
+      - lastName
+      - username
+      - password
+    properties:
+      id:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+      isAdmin:
+        type: boolean
+        default: false
+      isActive:
+        type: boolean
+        default: false
+  Test:
+    type: object
+    required:
+      - code
+      - instruction
+      - prompt
+      - durationInMinutes
+      - testType
+    properties:
+      code:
+        type: string
+      instruction:
+        type: string
+      prompt:
+        type: string
+      durationInMinutes:
+        type: integer
+      type:
+        type: string
+        enum:
+          - Exiting
+          - Final
+          - Journal
+      semester:
+        type: string
+        enum:
+          - Winter
+          - Summer
+          - Fall
+  Essay:
+    type: object
+    required:
+      - studentName
+      - timeSpentInMinutes
+      - testCode
+      - body
+    properties:
+      studentName:
+        type: string
+      timeSpentInMinutes:
+        type: integer
+      testCode:
+        type: string
+      body:
+        type: string
+  ErrorMessage:
+    type: object
+    required:
+      - code
+      - message
+      - detail
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      detail:
+        type: array
+        items:
+          type: string
