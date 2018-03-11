@@ -7,10 +7,10 @@ const serverConfig = require('./server/server.config');
 const ENV = argv.env;
 if (!ENV) throw new Error('Argument \'env\' not found. i.e --env=dev');
 
-var db = dbConfig.get(ENV);
-var server = serverConfig.get(ENV);
+const db = dbConfig.get(ENV);
+const server = serverConfig.get(ENV);
 
-var config = {
+const config = {
     env: ENV,
     server: server,
     db: db

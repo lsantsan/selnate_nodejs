@@ -1,8 +1,8 @@
 'use strict';
 
-var util = require('util');
+const util = require('util');
 
-var config = {
+const config = {
     dev: {
         requiredEnvVariables: [],
         port: '3000',
