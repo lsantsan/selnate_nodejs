@@ -1,6 +1,7 @@
-var app = require('./app/app');
-var port = process.env.PORT || 3000;
+'use strict';
 
-var server = app.listen(port, function () {
-    console.log('Express server listening on port ' + port);
-});
+var config = require('./config/config');
+var app = require('./app/app');
+
+app.create(config);
+app.start();

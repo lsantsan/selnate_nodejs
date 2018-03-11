@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var v1Router = require('./v1');
+var v1Router = require('./v1/v1');
 
 var router = express.Router();
 

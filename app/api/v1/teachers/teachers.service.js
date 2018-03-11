@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
 var TeacherModel = require('./teachers.model');
 
 var post = function (req, res) {
-    TeacherModel.create({
+    /*TeacherModel.create({
             name: req.body.name,
             lastName: req.body.lastName,
             username: req.body.username,
@@ -16,7 +16,26 @@ var post = function (req, res) {
                 return res.status(500).send(err);
             }
             res.status(200).send(teacher);
-        });
+        });*/
+    var dogs = [{
+        id: 1,
+        name: 'Corgi',
+        origin: 'Wales',
+        breeds: [
+            'Pembroke',
+            'Cardigan'
+        ]
+    }, {
+        id: 2,
+        name: 'Husky',
+        breeds: [
+            'Alaskan',
+            'Siberian',
+            'Labrador',
+            'Sakhalin'
+        ]
+    }];
+    res.status(200).send(dogs);
 
 };
 
