@@ -10,8 +10,8 @@ var app = express();
 var create = function (config) {
     //Setting up app's basic info
     app.set('env', config.env);
-    app.set('port', config.port);
-    app.set('host', config.host);
+    app.set('host', config.server.host);
+    app.set('port', config.server.port);
 
     //Setting up middleware
     app.use(bodyParser.urlencoded({extended: true}));

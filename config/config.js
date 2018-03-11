@@ -1,11 +1,19 @@
 'use strict';
 
-var dbConfig = require('./db/db.config');
+const argv = require('minimist')(process.argv.slice(2));
+const dbConfig = require('./db/db.config');
+const serverConfig = require('./server/server.config');
+
+const ENV = argv.env;
+if (!ENV) throw new Error('Argument \'env\' not found. i.e --env=dev');
+
+var db = dbConfig.get(ENV);
+var server = serverConfig.get(ENV);
 
 var config = {
-    env: 'dev',
-    port: '3000',
-    host: '127.0.0.1'
+    env: ENV,
+    server: server,
+    db: db
 };
 
 module.exports = config;

@@ -1,6 +1,8 @@
 'use strict';
 
-module.exports = {
+var util = require('util');
+
+var config = {
     dev: {
         requiredEnvVariables: [],
         username: 'selnateUser',
@@ -15,4 +17,19 @@ module.exports = {
         host: '127.0.0.1',
         port: '27017'
     }
+};
+
+var get = function (ENV) {
+    var dbConfig = config[ENV];
+    if (!dbConfig) throw new Error(util.format('[DB CONFIG] Environment \'%s\' not found in the db config file.', ENV));
+
+    dbConfig.requiredEnvVariables.forEach(function (varName) {
+        if (!process.env[varName]) throw new Error(util.format('[DB CONFIG] Environment variable \'%s\' not found on this host for \'%s\' environment.', varName, ENV));
+    });
+
+    return dbConfig;
+};
+
+module.exports = {
+    get: get
 };
