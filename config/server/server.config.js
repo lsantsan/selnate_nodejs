@@ -16,12 +16,12 @@ const config = {
 };
 
 //Refactor: create a config class
-var get = function (ENV) {
-    var serverConfig = config[ENV];
+const get = function (ENV) {
+    const serverConfig = config[ENV];
     if (!serverConfig) throw new Error(util.format('[SERVER CONFIG] Environment \'%s\' not found in the server config file.', ENV));
 
     serverConfig.requiredEnvVariables.forEach(function (varName) {
-        if (!process.env[varName]) throw new Error(util.format('[DB CONFIG] Environment variable \'%s\' not found on this host for \'%s\' environment.', varName, ENV));
+        if (!process.env[varName]) throw new Error(util.format('[SERVER CONFIG] Environment variable \'%s\' not found on this host for \'%s\' environment.', varName, ENV));
     });
 
     return serverConfig;

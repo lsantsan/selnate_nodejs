@@ -1,7 +1,6 @@
 'use strict';
 
-var config = require('./config/config');
-var app = require('./app/app');
+const config = require('./config/config');
+const app = require('./app/app');
 
-app.create(config);
-app.start();
+app.start(config);

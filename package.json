@@ -11,13 +11,18 @@
   "author": "Lucas Santana",
   "license": "ISC",
   "dependencies": {
+    "app-root-path": "^2.0.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "minimist": "^1.2.0",
     "mongoose": "^5.0.9",
-    "npm": "^5.7.1"
+    "morgan": "^1.9.0",
+    "npm": "^5.7.1",
+    "winston": "^2.4.1",
+    "winston-log-and-exit": "^1.0.6"
   },
   "devDependencies": {
+    "eslint": "^4.18.2",
     "nodemon": "^1.17.1"
   }
 }
