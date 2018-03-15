@@ -37,12 +37,6 @@ mongoose.connection.on('disconnected', function () {
     logger.info('Database is disconnected.');
 });
 
-// If the Node process ends, close the Mongoose connection
-process.on('SIGINT', function () {
-    mongoose.disconnect();
-    process.exit(0);
-});
-
 module.exports = {
     connect: connect
 };

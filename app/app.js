@@ -4,6 +4,7 @@ const util = require('util');
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const apiRouter = require('./api/api');
 const dbConnection = require('../config/db/db.connection');
 const logger = require('./../config/logger/logger.config');
@@ -56,6 +57,12 @@ const startApp = function () {
         });
     });
 };
+
+// If the Node process ends, close the Mongoose connection
+process.on('SIGINT', function () {
+    mongoose.disconnect();
+    logger.logAndExit('info', 'App terminated.', 0);//exitCode=0
+});
 
 const start = function (config) {
     createApp(config);
