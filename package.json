@@ -6,8 +6,15 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha ./app/api/**/*.test.js --reporter spec",
     "dev": "nodemon server.js",
-    "start": "node server.js --env=dev"
+    "start": "node server.js --env=dev",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
+    "eslint": "eslint ."
   },
+  "pre-commit": [
+    "precommit-msg",
+    "eslint",
+    "test"
+  ],
   "author": "Lucas Santana",
   "license": "ISC",
   "dependencies": {
@@ -28,6 +35,7 @@
     "mocha": "^5.0.4",
     "nodemon": "^1.17.1",
     "nyc": "^11.6.0",
+    "pre-commit": "^1.2.2",
     "sinon": "^4.4.6"
   }
 }
