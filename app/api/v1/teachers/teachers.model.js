@@ -1,11 +1,35 @@
-var mongoose = require('mongoose');
-var TeacherSchema = new mongoose.Schema({
-    firstName: String,
-    lastName: String,
-    username: String,
-    password: String,
-    isAdmin: Boolean,
-    isActive: Boolean
+const mongoose = require('mongoose');
+const TeacherSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    lastName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true
+    },
+    password: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true
+    },
+    isActive: {
+        type: Boolean,
+        required: true
+    }
 });
 
 mongoose.model('Teachers', TeacherSchema);
