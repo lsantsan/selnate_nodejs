@@ -8,11 +8,11 @@
     "dev": "nodemon server.js",
     "start": "node server.js --env=dev",
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
-    "eslint": "eslint ."
+    "lint": "eslint ."
   },
   "pre-commit": [
     "precommit-msg",
-    "eslint",
+    "lint",
     "test"
   ],
   "author": "Lucas Santana",
