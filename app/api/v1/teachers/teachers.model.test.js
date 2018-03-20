@@ -35,10 +35,10 @@ describe('Teacher Model', function () {
 
             try {
                 await emptyTeacher.validate();
-            } catch (reason) {
-                expect(reason).to.not.be.null;
-                expect(reason).to.have.property('name', 'ValidationError');
-                assert.hasAllKeys(reason.errors, requiredProperties);
+            } catch (error) {
+                expect(error).to.not.be.null;
+                expect(error).to.have.property('name', 'ValidationError');
+                assert.hasAllKeys(error.errors, requiredProperties);
             }
         });
 
@@ -54,11 +54,11 @@ describe('Teacher Model', function () {
 
             try {
                 await invalidTeacher.validate();
-            } catch (reason) {
-                expect(reason).to.not.be.null;
-                expect(reason).to.have.property('name', 'ValidationError');
-                expect(reason.errors).to.have.property('isActive');
-                expect(reason.errors).to.have.property('isAdmin');
+            } catch (error) {
+                expect(error).to.not.be.null;
+                expect(error).to.have.property('name', 'ValidationError');
+                expect(error.errors).to.have.property('isActive');
+                expect(error.errors).to.have.property('isAdmin');
 
             }
 

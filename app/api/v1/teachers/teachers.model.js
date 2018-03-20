@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
 const TeacherSchema = new mongoose.Schema({
     firstName: {
         type: String,
