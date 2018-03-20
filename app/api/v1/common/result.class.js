@@ -3,7 +3,7 @@
 const DEFAULT_STATUS = 500;
 const DEFAULT_BODY = 'Default Body';
 
-module.exports = class Result {
+class Result {
 
     constructor(status, body) {
         if (!arguments.length) {
@@ -14,5 +14,6 @@ module.exports = class Result {
             this.body = body;
         }
     }
+}
 
-};
+module.exports = Result;
