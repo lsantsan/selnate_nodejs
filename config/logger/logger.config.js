@@ -5,7 +5,7 @@ const winston = require('winston');
 require('winston-log-and-exit');
 const appRoot = require('app-root-path');
 
-const ENV = argv.env;
+const ENV = !argv.env ? 'default' : argv.env;
 
 const options = {
     dev: {
@@ -25,6 +25,15 @@ const options = {
             json: false,
             maxsize: 5242880, //5MB
             colorize: false,
+            timestamp: () => new Date().toLocaleString()
+        }
+    },
+    default: {
+        console: {
+            level: 'info',
+            handleExceptions: true,
+            json: false,
+            colorize: true,
             timestamp: () => new Date().toLocaleString()
         }
     }
