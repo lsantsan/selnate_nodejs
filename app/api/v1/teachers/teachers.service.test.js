@@ -58,29 +58,28 @@ describe('Teacher Service', function () {
             assert.deepEqual(result, expectedResult)
         });
 
-        it('should return validation error', async () => {
+        it('should handle validation error', async () => {
             //GIVEN
-            const ERROR_CODE = 'APP-100';
-            const ERROR_MESSAGE = 'Teacher not created.';
-
             const req = validRequest;
 
-            const dbResult = {
+            const dbError = {
                 name: 'ValidationError',
                 message: 'This a validation _message.'
             };
 
-            const expectedResult = new Result(400, new ErrorMessage(ERROR_CODE, ERROR_MESSAGE, dbResult));
+            const ERROR_CODE = 'APP-100';
+            const ERROR_MESSAGE = 'Teacher not created.';
+            const expectedResult = new Result(400, new ErrorMessage(ERROR_CODE, ERROR_MESSAGE, dbError));
 
             //mocks
             teacherModelMock.expects('create')
                 .once()
                 .withExactArgs(req)
-                .rejects(dbResult);
+                .rejects(dbError);
 
             loggerMock.expects('error')
                 .once()
-                .withExactArgs(dbResult)
+                .withExactArgs(dbError)
                 .resolves();
 
             //WHEN
@@ -91,6 +90,42 @@ describe('Teacher Service', function () {
             loggerMock.verify();
             assert.isObject(result);
             assert.deepEqual(result, expectedResult)
+        });
+
+        it('should handle generic error', async () => {
+            //GIVEN
+            const req = validRequest;
+
+            const dbError = {
+                name: 'MongoError',
+                err: 'E11000 duplicate key error index: ussdauto.operators.$name_1  dup key: { : \\"OpTest\\" }',
+                code: '11000'
+            };
+
+            const ERROR_CODE = 'APP-999';
+            const ERROR_MESSAGE = 'Internal error.';
+            const expectedResult = new Result(500, new ErrorMessage(ERROR_CODE, ERROR_MESSAGE, dbError));
+
+            //mock
+            teacherModelMock.expects('create')
+                .once()
+                .withExactArgs(req)
+                .rejects(dbError);
+
+            loggerMock.expects('error')
+                .once()
+                .withExactArgs(dbError)
+                .resolves();
+
+            //WHEN
+            const result = await teacherService.post(req);
+
+            //THEN
+            teacherModelMock.verify();
+            loggerMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult)
+
         });
     });
 
