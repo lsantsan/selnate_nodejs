@@ -7,6 +7,8 @@ const assert = chai.assert;
 const sinon = require('sinon').createSandbox();
 const teacherService = require('./teachers.service');
 const TeacherModel = require('./teachers.model');
+const Result = require('./../common/result.class');
+const ErrorMessage = require('./../common/error-message.class');
 const Logger = require('../../../../config/logger/logger.config');
 
 describe('Teacher Service', function () {
@@ -39,10 +41,7 @@ describe('Teacher Service', function () {
             const dbResult = input;
             dbResult._id = 'adsftrw1234';
 
-            const expectedResult = {
-                status: 200,
-                body: dbResult
-            };
+            const expectedResult = new Result(200, dbResult);
 
             //mocks
             teacherModelMock.expects('create')
@@ -71,14 +70,7 @@ describe('Teacher Service', function () {
                 message: 'This a validation _message.'
             };
 
-            const expectedResult = {
-                status: 400,
-                body: {
-                    code: ERROR_CODE,
-                    message: ERROR_MESSAGE,
-                    detail: dbResult
-                }
-            };
+            const expectedResult = new Result(400, new ErrorMessage(ERROR_CODE, ERROR_MESSAGE, dbResult));
 
             //mocks
             teacherModelMock.expects('create')
