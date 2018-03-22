@@ -2,6 +2,7 @@
 
 const appRequire = require('app-root-path').require;
 const logger = appRequire('/config/logger/logger.config');
+const bcrypt = require('bcryptjs');
 const HttpStatus = require('http-status-codes');
 const AppStatus = require('./../common/app-status');
 const _$ = require('./../common/constants');
@@ -54,7 +55,9 @@ const post = async function (request) {
     let result = new Result();
 
     try {
+        request.password = await bcrypt.hash(request.password, _$.SALT);
         const body = await TeacherModel.create(request);
+        Reflect.deleteProperty(body._doc, 'password');
         result.status = HttpStatus.OK;
         result.body = body;
     }

@@ -5,6 +5,7 @@
 const chai = require('chai');
 const assert = chai.assert;
 const sinon = require('sinon').createSandbox();
+const bcrypt = require('bcryptjs');
 const HttpStatus = require('http-status-codes');
 const AppStatus = require('./../common/app-status');
 const _$ = require('./../common/constants');
@@ -19,6 +20,7 @@ describe('Teacher Service', function () {
     describe('Post', function () {
         let teacherModelMock = null;
         let loggerMock = null;
+        let bcryptMock = null;
 
         const validRequest = {
             firstName: 'firstName1',
@@ -32,6 +34,7 @@ describe('Teacher Service', function () {
         beforeEach(() => {
             teacherModelMock = sinon.mock(TeacherModel);
             loggerMock = sinon.mock(Logger);
+            bcryptMock = sinon.mock(bcrypt);
         });
         afterEach(() => {
             sinon.restore();
@@ -40,22 +43,32 @@ describe('Teacher Service', function () {
         it('should create a new teacher', async () => {
             //GIVEN
             const input = validRequest;
+            const inputWithHashPassword = Object.assign({}, input);
+            inputWithHashPassword.password = await bcrypt.hash(inputWithHashPassword.password, _$.SALT);
 
-            const dbResult = input;
-            dbResult._id = 'adsftrw1234';
+            const dbResult = Object.assign({}, input);
+            dbResult._id = '123342412';
+            Reflect.deleteProperty(dbResult, 'password');
+            dbResult._doc = dbResult;
 
             const expectedResult = new Result(HttpStatus.OK, dbResult);
 
             //mocks
+            bcryptMock.expects('hash')
+                .once()
+                .withExactArgs(input.password, _$.SALT)
+                .resolves(inputWithHashPassword.password);
+
             teacherModelMock.expects('create')
                 .once()
-                .withExactArgs(input)
+                .withExactArgs(inputWithHashPassword)
                 .resolves(dbResult);
 
             //WHEN
             const result = await teacherService.post(input);
 
             //THEN
+            bcryptMock.verify();
             teacherModelMock.verify();
             assert.isObject(result);
             assert.deepEqual(result, expectedResult)
