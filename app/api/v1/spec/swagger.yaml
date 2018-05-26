@@ -11,6 +11,8 @@ tags:
     description: Information about the Tests service.
   - name: essays
     description: Information about the Essays service.
+  - name: auth
+    description: Authentication services
 schemes:
   - http
 paths:
@@ -361,6 +363,29 @@ paths:
           description: Student not found; Test Code not found;
           schema:
             $ref: '#/definitions/ErrorMessage'
+  /auth/login:
+    post:
+      tags:
+        - auth
+      description: Login a teacher.
+      parameters:
+        - in: body
+          name: body
+          description: Username and password.
+          required: true
+          schema:
+            $ref: '#/definitions/LoginRequest'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfull operation.
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        401:
+          description: Login not valid.
+          schema:
+            $ref: '#/definitions/ErrorMessage'
 definitions:
   Teacher:
     type: object
@@ -430,6 +455,26 @@ definitions:
       testCode:
         type: string
       body:
+        type: string
+  LoginRequest:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  LoginResponse:
+    type: object
+    required:
+      - auth
+      - token
+    properties:
+      auth:
+        type: boolean
+      token:
         type: string
   ErrorMessage:
     type: object

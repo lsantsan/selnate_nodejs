@@ -6,12 +6,14 @@ const config = {
     dev: {
         requiredEnvVariables: [],
         port: '3000',
-        host: '127.0.0.1'
+        host: '127.0.0.1',
+        jwtSecret: 'cangetin'
     },
     prod: {
-        requiredEnvVariables: [],
+        requiredEnvVariables: ['NODE_JWT_SECRET'],
         port: '3000',
-        host: '127.0.0.1'
+        host: '127.0.0.1',
+        jwtSecret: process.env.NODE_JWT_SECRET
     }
 };
 

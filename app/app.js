@@ -19,6 +19,7 @@ const createApp = function (config) {
     app.set('env', config.env);
     app.set('host', config.server.host);
     app.set('port', config.server.port);
+    app.set('jwtSecret', config.server.jwtSecret);
 
     //Setting up middleware
     app.use(bodyParser.urlencoded({extended: true}));
