@@ -9,6 +9,7 @@ const _$ = require('./../common/constants');
 const TeacherModel = require('./teachers.model');
 const ErrorMessage = require('../common/ErrorMessage');
 const Result = require('../common/Result');
+const AppError = require('./../common/AppError');
 
 function handleValidationError(error) {
     const body = new ErrorMessage(AppStatus.TEACHER_NOT_CREATED, AppStatus.getStatusText(AppStatus.TEACHER_NOT_CREATED), {
@@ -17,12 +18,6 @@ function handleValidationError(error) {
     });
 
     return new Result(HttpStatus.BAD_REQUEST, body);
-}
-
-function handleGenericError(error) {
-    const body = new ErrorMessage(AppStatus.INTERNAL_ERROR, AppStatus.getStatusText(AppStatus.INTERNAL_ERROR), error);
-
-    return new Result(HttpStatus.INTERNAL_SERVER_ERROR, body);
 }
 
 function handleMongoError(error) {
@@ -36,7 +31,7 @@ function handleMongoError(error) {
             return new Result(HttpStatus.BAD_REQUEST, body);
         }
         default:
-            return handleGenericError(error);
+            return AppError.handleGenericError();
     }
 }
 
@@ -47,7 +42,7 @@ function handleErrors(error) {
         case _$.MONGO_ERROR:
             return handleMongoError(error);
         default:
-            return handleGenericError(error);
+            return AppError.handleGenericError();
     }
 }
 

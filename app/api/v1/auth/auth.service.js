@@ -10,7 +10,7 @@ const _$ = require('./../common/constants');
 const TeacherModel = require('./../teachers/teachers.model');
 const ErrorMessage = require('../common/ErrorMessage');
 const Result = require('../common/Result');
-
+const AppError = require('./../common/AppError');
 
 function handleLoginError() {
     const body = new ErrorMessage(
@@ -22,18 +22,12 @@ function handleLoginError() {
     return new Result(HttpStatus.UNAUTHORIZED, body);
 }
 
-function handleGenericError(error) {
-    const body = new ErrorMessage(AppStatus.INTERNAL_ERROR, AppStatus.getStatusText(AppStatus.INTERNAL_ERROR), error);
-
-    return new Result(HttpStatus.INTERNAL_SERVER_ERROR, body);
-}
-
 function handleErrors(error) {
     switch (error.name) {
         case _$.LOGIN_ERROR:
             return handleLoginError();
         default:
-            return handleGenericError(error);
+            return AppError.handleGenericError();
     }
 }
 

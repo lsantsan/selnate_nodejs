@@ -128,7 +128,7 @@ describe('Teacher Service', function () {
                 new ErrorMessage(
                     AppStatus.INTERNAL_ERROR,
                     AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
-                    dbError
+                    {message: _$.GENERIC_ERROR_MESSAGE}
                 )
             );
 
@@ -169,7 +169,7 @@ describe('Teacher Service', function () {
                 new ErrorMessage(
                     AppStatus.INTERNAL_ERROR,
                     AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
-                    dbError
+                    {message: _$.GENERIC_ERROR_MESSAGE}
                 )
             );
 

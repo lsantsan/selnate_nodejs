@@ -4,6 +4,7 @@ const HttpStatus = require('http-status-codes');
 const AppStatus = require('./../common/app-status');
 const ErrorMessage = require('../common/ErrorMessage');
 const Result = require('../common/Result');
+const _$ = require('./../common/constants');
 
 class AppError {
 
@@ -15,7 +16,7 @@ class AppError {
 
     static handleGenericError() {
         const body = new ErrorMessage(AppStatus.INTERNAL_ERROR, AppStatus.getStatusText(AppStatus.INTERNAL_ERROR), {
-            message: 'Something went wrong. Please look at the logs.'
+            message: _$.GENERIC_ERROR_MESSAGE
         });
 
         return new Result(HttpStatus.INTERNAL_SERVER_ERROR, body);

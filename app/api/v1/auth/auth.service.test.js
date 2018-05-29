@@ -14,6 +14,7 @@ const TeacherModel = require('./../teachers/teachers.model');
 const ErrorMessage = require('../common/ErrorMessage');
 const Logger = require('../../../../config/logger/logger.config');
 const Result = require('../common/Result');
+const _$ = require('./../common/constants');
 
 
 describe('Auth Service', function () {
@@ -193,7 +194,7 @@ describe('Auth Service', function () {
                 new ErrorMessage(
                     AppStatus.INTERNAL_ERROR,
                     AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
-                    error
+                    {message: _$.GENERIC_ERROR_MESSAGE}
                 )
             );
 
