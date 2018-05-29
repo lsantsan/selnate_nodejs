@@ -8,8 +8,9 @@ const HttpStatus = require('http-status-codes');
 const AppStatus = require('./../common/app-status');
 const _$ = require('./../common/constants');
 const TeacherModel = require('./../teachers/teachers.model');
-const ErrorMessage = require('./../common/error-message.class');
-const Result = require('./../common/result.class');
+const ErrorMessage = require('../common/ErrorMessage');
+const Result = require('../common/Result');
+
 
 function handleLoginError() {
     const body = new ErrorMessage(

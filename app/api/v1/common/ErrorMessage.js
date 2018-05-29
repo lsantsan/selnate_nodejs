@@ -1,12 +1,16 @@
 'use strict';
 
-class ErrorMesage {
+class ErrorMessage {
 
     constructor(code, message, detail) {
         this.code = code;
         this.message = message;
         this.detail = detail;
     }
+
+    toString() {
+        return `(${this.code}, ${this.message}, ${this.detail})`;
+    }
 }
 
-module.exports = ErrorMesage;
+module.exports = ErrorMessage;

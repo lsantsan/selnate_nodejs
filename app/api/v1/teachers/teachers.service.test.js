@@ -11,8 +11,8 @@ const AppStatus = require('./../common/app-status');
 const _$ = require('./../common/constants');
 const teacherService = require('./teachers.service');
 const TeacherModel = require('./teachers.model');
-const Result = require('./../common/result.class');
-const ErrorMessage = require('./../common/error-message.class');
+const Result = require('../common/Result');
+const ErrorMessage = require('../common/ErrorMessage');
 const Logger = require('../../../../config/logger/logger.config');
 
 describe('Teacher Service', function () {

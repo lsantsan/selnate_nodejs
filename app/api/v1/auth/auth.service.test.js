@@ -11,9 +11,9 @@ const HttpStatus = require('http-status-codes');
 const AppStatus = require('./../common/app-status');
 const authService = require('./auth.service');
 const TeacherModel = require('./../teachers/teachers.model');
-const ErrorMessage = require('./../common/error-message.class');
+const ErrorMessage = require('../common/ErrorMessage');
 const Logger = require('../../../../config/logger/logger.config');
-const Result = require('./../common/result.class');
+const Result = require('../common/Result');
 
 
 describe('Auth Service', function () {
