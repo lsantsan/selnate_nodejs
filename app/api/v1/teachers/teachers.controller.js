@@ -8,7 +8,7 @@ const VerifyToken = require('./../common/middleware-util');
 const router = express.Router();
 
 router.post('/', VerifyToken, function (req, res) {
-    teachersService.post(req.body)
+    teachersService.post(req.body, req.consumerId)
         .then(result => {
             res.status(result.status)
                 .send(result.body);

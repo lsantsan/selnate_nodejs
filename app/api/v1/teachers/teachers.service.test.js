@@ -43,8 +43,10 @@ describe('Teacher Service', function () {
         it('should create a new teacher', async () => {
             //GIVEN
             const input = validRequest;
-            const inputWithHashPassword = Object.assign({}, input);
-            inputWithHashPassword.password = await bcrypt.hash(inputWithHashPassword.password, _$.SALT);
+            const consumerId = 'bacwe1234rty';
+            const teacherObject = Object.assign({}, input);
+            teacherObject.password = await bcrypt.hash(teacherObject.password, _$.SALT);
+            teacherObject._updatedBy = consumerId;
 
             const dbResult = Object.assign({}, input);
             dbResult._id = '123342412';
@@ -57,15 +59,15 @@ describe('Teacher Service', function () {
             bcryptMock.expects('hash')
                 .once()
                 .withExactArgs(input.password, _$.SALT)
-                .resolves(inputWithHashPassword.password);
+                .resolves(teacherObject.password);
 
             teacherModelMock.expects('create')
                 .once()
-                .withExactArgs(inputWithHashPassword)
+                .withExactArgs(teacherObject)
                 .resolves(dbResult);
 
             //WHEN
-            const result = await teacherService.post(input);
+            const result = await teacherService.post(input, consumerId);
 
             //THEN
             bcryptMock.verify();

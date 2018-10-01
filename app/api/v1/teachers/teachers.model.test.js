@@ -12,6 +12,7 @@ describe('Teacher Model', function () {
             const _lastName = ' lastName1 ';
             const _username = ' USERName1 ';
             const _password = ' P@$$w0rd ';
+            const _updatedBy = ' bac13423sdesd ';
 
             const teacher1 = new TeacherModel({
                 firstName: _firstName,
@@ -19,7 +20,8 @@ describe('Teacher Model', function () {
                 username: _username,
                 password: _password,
                 isAdmin: true,
-                isActive: true
+                isActive: true,
+                _updatedBy: _updatedBy
             });
 
             await teacher1.validate();
@@ -27,11 +29,12 @@ describe('Teacher Model', function () {
             assert.strictEqual(teacher1._doc.lastName, _lastName.trim());
             assert.strictEqual(teacher1._doc.username, _username.trim().toLowerCase());
             assert.strictEqual(teacher1._doc.password, _password.trim());
+            assert.strictEqual(teacher1._doc._updatedBy, _updatedBy.trim());
         });
 
         it('should have validation error for empty teacher', async () => {
             const emptyTeacher = new TeacherModel({});
-            const requiredProperties = ['firstName', 'lastName', 'username', 'password', 'isAdmin', 'isActive'];
+            const requiredProperties = ['firstName', 'lastName', 'username', 'password', 'isAdmin', 'isActive', '_updatedBy'];
 
             try {
                 await emptyTeacher.validate();

@@ -1,4 +1,8 @@
+'use strict';
+
 const mongoose = require('mongoose');
+const mongooseHistory = require('mongoose-history');
+
 mongoose.Promise = global.Promise;
 
 const TeacherSchema = new mongoose.Schema({
@@ -32,9 +36,16 @@ const TeacherSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         required: true
+    },
+    _updatedBy: {
+        type: String,
+        required: true,
+        trim: true,
+        select: false
     }
 });
 
+TeacherSchema.plugin(mongooseHistory);
 mongoose.model('Teachers', TeacherSchema);
 
 module.exports = mongoose.model('Teachers');

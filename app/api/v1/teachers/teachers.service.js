@@ -46,13 +46,16 @@ function handleErrors(error) {
     }
 }
 
-const post = async function (request) {
+const post = async function (request, consumerId) {
     let result = new Result();
 
     try {
         request.password = await bcrypt.hash(request.password, _$.SALT);
+        request._updatedBy = consumerId;
+
         const body = await TeacherModel.create(request);
         Reflect.deleteProperty(body._doc, 'password');
+
         result.status = HttpStatus.OK;
         result.body = body;
     }
