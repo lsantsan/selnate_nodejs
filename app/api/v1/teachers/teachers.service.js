@@ -67,8 +67,25 @@ const post = async function (request, consumerId) {
     return result;
 };
 
+const getAll = async function () {
+    let result = new Result();
+
+    try {
+        const teachers = await TeacherModel.find({'isActive': true});
+        result.status = HttpStatus.OK;
+        result.body = teachers;
+
+    } catch (error) {
+        logger.error(error);
+        result = handleErrors(error);
+    }
+
+    return result;
+};
+
 module.exports = {
-    post: post
+    post: post,
+    getAll: getAll
 };
 
 

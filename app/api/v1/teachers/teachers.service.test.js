@@ -1,6 +1,7 @@
+/* eslint-disable max-lines */
+
 'use strict';
 
-/* eslint-disable max-statements */
 
 const chai = require('chai');
 const assert = chai.assert;
@@ -16,33 +17,33 @@ const ErrorMessage = require('../common/ErrorMessage');
 const Logger = require('../../../../config/logger/logger.config');
 
 describe('Teacher Service', function () {
+    const validTeacher = {
+        firstName: 'firstName1',
+        lastName: 'lastName1',
+        username: 'myusername',
+        password: 'P@$$w0rd',
+        isAdmin: true,
+        isActive: true
+    };
+
+    let teacherModelMock = null;
+    let loggerMock = null;
+    let bcryptMock = null;
+
+    beforeEach(() => {
+        teacherModelMock = sinon.mock(TeacherModel);
+        loggerMock = sinon.mock(Logger);
+        bcryptMock = sinon.mock(bcrypt);
+    });
+    afterEach(() => {
+        sinon.restore();
+    });
 
     describe('Post', function () {
-        let teacherModelMock = null;
-        let loggerMock = null;
-        let bcryptMock = null;
-
-        const validRequest = {
-            firstName: 'firstName1',
-            lastName: 'lastName1',
-            username: 'myusername',
-            password: 'P@$$w0rd',
-            isAdmin: true,
-            isActive: true
-        };
-
-        beforeEach(() => {
-            teacherModelMock = sinon.mock(TeacherModel);
-            loggerMock = sinon.mock(Logger);
-            bcryptMock = sinon.mock(bcrypt);
-        });
-        afterEach(() => {
-            sinon.restore();
-        });
 
         it('should create a new teacher', async () => {
             //GIVEN
-            const input = validRequest;
+            const input = validTeacher;
             const consumerId = 'bacwe1234rty';
             const teacherObject = Object.assign({}, input);
             teacherObject.password = await bcrypt.hash(teacherObject.password, _$.SALT);
@@ -73,12 +74,12 @@ describe('Teacher Service', function () {
             bcryptMock.verify();
             teacherModelMock.verify();
             assert.isObject(result);
-            assert.deepEqual(result, expectedResult)
+            assert.deepEqual(result, expectedResult);
         });
 
         it('should handle validation error', async () => {
             //GIVEN
-            const req = validRequest;
+            const req = validTeacher;
 
             const dbError = {
                 name: _$.VALIDATION_ERROR,
@@ -112,12 +113,12 @@ describe('Teacher Service', function () {
             teacherModelMock.verify();
             loggerMock.verify();
             assert.isObject(result);
-            assert.deepEqual(result, expectedResult)
+            assert.deepEqual(result, expectedResult);
         });
 
         it('should handle generic error', async () => {
             //GIVEN
-            const req = validRequest;
+            const req = validTeacher;
 
             const dbError = {
                 name: 'GenericError',
@@ -152,13 +153,13 @@ describe('Teacher Service', function () {
             teacherModelMock.verify();
             loggerMock.verify();
             assert.isObject(result);
-            assert.deepEqual(result, expectedResult)
+            assert.deepEqual(result, expectedResult);
 
         });
 
         it('should handle generic MongoDb error', async () => {
             //GIVEN
-            const req = validRequest;
+            const req = validTeacher;
 
             const dbError = {
                 name: _$.MONGO_ERROR,
@@ -193,13 +194,13 @@ describe('Teacher Service', function () {
             teacherModelMock.verify();
             loggerMock.verify();
             assert.isObject(result);
-            assert.deepEqual(result, expectedResult)
+            assert.deepEqual(result, expectedResult);
 
         });
 
         it('should handle duplicate username error', async () => {
             //GIVEN
-            const req = validRequest;
+            const req = validTeacher;
 
             const dbError = {
                 name: _$.MONGO_ERROR,
@@ -237,8 +238,68 @@ describe('Teacher Service', function () {
             teacherModelMock.verify();
             loggerMock.verify();
             assert.isObject(result);
-            assert.deepEqual(result, expectedResult)
+            assert.deepEqual(result, expectedResult);
         });
     });
 
+    describe('Get', () => {
+        it('should return a list of all teachers', async () => {
+            //GIVEN
+            const findAllCriteria = {'isActive': true};
+
+            //mock
+            teacherModelMock.expects('find')
+                .once()
+                .withExactArgs(findAllCriteria)
+                .resolves([validTeacher, validTeacher]);
+
+            const expectedResult = new Result(HttpStatus.OK, [validTeacher, validTeacher]);
+
+            //WHEN
+            const result = await teacherService.getAll();
+
+            //THEN
+            teacherModelMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it('should handle generic error', async () => {
+            //GIVEN
+            const findAllCriteria = {'isActive': true};
+            const dbError = {
+                name: 'GenericError',
+                err: 'This is a generic error message',
+                code: 12345
+            };
+            const expectedResult = new Result(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                new ErrorMessage(
+                    AppStatus.INTERNAL_ERROR,
+                    AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
+                    {message: _$.GENERIC_ERROR_MESSAGE}
+                )
+            );
+
+            //mock
+            teacherModelMock.expects('find')
+                .once()
+                .withExactArgs(findAllCriteria)
+                .rejects(dbError);
+
+            loggerMock.expects('error')
+                .once()
+                .withExactArgs(dbError)
+                .resolves();
+
+            //WHEN
+            const result = await teacherService.getAll();
+
+            //THEN
+            teacherModelMock.verify();
+            loggerMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        })
+    });
 });

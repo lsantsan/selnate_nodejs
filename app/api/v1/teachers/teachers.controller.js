@@ -15,4 +15,12 @@ router.post('/', VerifyToken, function (req, res) {
         });
 });
 
+router.get('/', VerifyToken, function (req, res) {
+    teachersService.getAll()
+        .then(result => {
+            res.status(result.status)
+                .send(result.body);
+        });
+});
+
 module.exports = router;
