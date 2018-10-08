@@ -71,7 +71,7 @@ const getAll = async function () {
     let result = new Result();
 
     try {
-        const teachers = await TeacherModel.find({'isActive': true});
+        const teachers = await TeacherModel.find({isActive: true});
         result.status = HttpStatus.OK;
         result.body = teachers;
 

@@ -242,10 +242,10 @@ describe('Teacher Service', function () {
         });
     });
 
-    describe('Get', () => {
+    describe('Get All', () => {
         it('should return a list of all teachers', async () => {
             //GIVEN
-            const findAllCriteria = {'isActive': true};
+            const findAllCriteria = {isActive: true};
 
             //mock
             teacherModelMock.expects('find')
