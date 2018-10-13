@@ -83,9 +83,40 @@ const getAll = async function () {
     return result;
 };
 
+const getByUsername = async function (username) {
+    let result = new Result();
+
+    try {
+        const teacher = await TeacherModel.findOne({
+            username: username,
+            isActive: true
+        });
+
+        if (!teacher) {
+            result.status = HttpStatus.NOT_FOUND;
+            result.body = new ErrorMessage(
+                AppStatus.TEACHER_NOT_FOUND,
+                AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
+                {username: username}
+            );
+
+            return result;
+        }
+        result.status = HttpStatus.OK;
+        result.body = teacher;
+
+    } catch (error) {
+        logger.error(error);
+        result = handleErrors(error);
+    }
+
+    return result;
+};
+
 module.exports = {
     post: post,
-    getAll: getAll
+    getAll: getAll,
+    getByUsername: getByUsername
 };
 
 

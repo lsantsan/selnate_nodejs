@@ -302,4 +302,106 @@ describe('Teacher Service', function () {
             assert.deepEqual(result, expectedResult);
         })
     });
+
+    describe('Get By Username', () => {
+        it('should return a Teacher by username', async () => {
+            //GIVEN
+            const username = 'myusername';
+            const searchCriteria = {
+                username: username,
+                isActive: true
+            };
+
+            //mock
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .resolves(validTeacher);
+
+            const expectedResult = new Result(HttpStatus.OK, validTeacher);
+
+            //WHEN
+            const result = await teacherService.getByUsername(username);
+
+            //THEN
+            teacherModelMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it('should handle Teacher not found', async () => {
+            //GIVEN
+            const username = 'myusername';
+            const searchCriteria = {
+                username: username,
+                isActive: true
+            };
+
+            //mock
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .resolves(null);
+
+            const expectedResult = new Result(
+                HttpStatus.NOT_FOUND,
+                new ErrorMessage(
+                    AppStatus.TEACHER_NOT_FOUND,
+                    AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
+                    {username: username}
+                )
+            );
+
+            //WHEN
+            const result = await teacherService.getByUsername(username);
+
+            //THEN
+            teacherModelMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it('should handle generic error', async () => {
+            //GIVEN
+            const username = 'myusername';
+            const searchCriteria = {
+                username: username,
+                isActive: true
+            };
+            const dbError = {
+                name: 'GenericError',
+                err: 'This is a generic error message',
+                code: 12345
+            };
+            const expectedResult = new Result(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                new ErrorMessage(
+                    AppStatus.INTERNAL_ERROR,
+                    AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
+                    {message: _$.GENERIC_ERROR_MESSAGE}
+                )
+            );
+
+            //mock
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .rejects(dbError);
+
+            loggerMock.expects('error')
+                .once()
+                .withExactArgs(dbError)
+                .resolves();
+
+            //WHEN
+            const result = await teacherService.getByUsername(username);
+
+            //THEN
+            teacherModelMock.verify();
+            loggerMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        })
+
+    });
 });

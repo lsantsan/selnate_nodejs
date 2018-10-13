@@ -23,4 +23,12 @@ router.get('/', VerifyToken, function (req, res) {
         });
 });
 
+router.get('/:username', VerifyToken, function (req, res) {
+    teachersService.getByUsername(req.params.username)
+        .then(result => {
+            res.status(result.status)
+                .send(result.body);
+        });
+});
+
 module.exports = router;
