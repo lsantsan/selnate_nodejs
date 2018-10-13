@@ -36,6 +36,7 @@ function handleMongoError(error) {
 }
 
 function handleErrors(error) {
+    logger.error(error);
     switch (error.name) {
         case _$.VALIDATION_ERROR:
             return handleValidationError(error);
@@ -60,7 +61,6 @@ const post = async function (request, consumerId) {
         result.body = body;
     }
     catch (error) {
-        logger.error(error);
         result = handleErrors(error);
     }
 
@@ -76,7 +76,6 @@ const getAll = async function () {
         result.body = teachers;
 
     } catch (error) {
-        logger.error(error);
         result = handleErrors(error);
     }
 
@@ -106,7 +105,6 @@ const getByUsername = async function (username) {
         result.body = teacher;
 
     } catch (error) {
-        logger.error(error);
         result = handleErrors(error);
     }
 
