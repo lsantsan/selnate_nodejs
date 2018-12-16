@@ -82,12 +82,12 @@ const getAll = async function () {
     return result;
 };
 
-const getByUsername = async function (username) {
+const getById = async function (id) {
     let result = new Result();
 
     try {
         const teacher = await TeacherModel.findOne({
-            username: username,
+            _id: id,
             isActive: true
         });
 
@@ -96,7 +96,7 @@ const getByUsername = async function (username) {
             result.body = new ErrorMessage(
                 AppStatus.TEACHER_NOT_FOUND,
                 AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
-                {username: username}
+                {_id: id}
             );
 
             return result;
@@ -114,7 +114,7 @@ const getByUsername = async function (username) {
 module.exports = {
     post: post,
     getAll: getAll,
-    getByUsername: getByUsername
+    getById: getById
 };
 
 

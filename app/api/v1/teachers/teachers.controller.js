@@ -23,8 +23,8 @@ router.get('/', VerifyToken, function (req, res) {
         });
 });
 
-router.get('/:username', VerifyToken, function (req, res) {
-    teachersService.getByUsername(req.params.username)
+router.get('/:id', VerifyToken, function (req, res) {
+    teachersService.getById(req.params.id)
         .then(result => {
             res.status(result.status)
                 .send(result.body);

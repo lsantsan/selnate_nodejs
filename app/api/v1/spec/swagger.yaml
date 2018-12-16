@@ -50,15 +50,15 @@ paths:
           description: Teacher not created.
           schema:
             $ref: '#/definitions/ErrorMessage'
-  '/teachers/{username}':
+  '/teachers/{id}':
     get:
       tags:
         - teachers
-      description: Retrieve a teacher account based on username.
+      description: Retrieve a teacher account based on id.
       parameters:
         - in: path
-          name: username
-          description: Teacher's username.
+          name: id
+          description: Teacher's id.
           required: true
           type: string
       produces:
@@ -75,11 +75,11 @@ paths:
     put:
       tags:
         - teachers
-      description: Update a teacher's account based on username.
+      description: Update a teacher's account based on id.
       parameters:
         - in: path
-          name: username
-          description: Teacher's username.
+          name: id
+          description: Teacher's id.
           required: true
           type: string
         - in: body
@@ -106,11 +106,11 @@ paths:
     delete:
       tags:
         - teachers
-      description: Deactivate a teacher account based on username.
+      description: Deactivate a teacher account based on id.
       parameters:
         - in: path
-          name: username
-          description: Teacher's name.
+          name: id
+          description: Teacher's id.
           required: true
           type: string
       produces:
@@ -122,15 +122,15 @@ paths:
           description: Teacher not found.
           schema:
             $ref: '#/definitions/ErrorMessage'
-  '/teachers/{username}/tests':
+  '/teachers/{id}/tests':
     get:
       tags:
         - teachers
-      description: Retrive a list of the teacher's test based on username.
+      description: Retrive a list of the teacher's test based on id.
       parameters:
         - in: path
-          name: username
-          description: Teacher's name.
+          name: id
+          description: Teacher's id.
           required: true
           type: string
       produces:

@@ -303,12 +303,12 @@ describe('Teacher Service', function () {
         })
     });
 
-    describe('Get By Username', () => {
-        it('should return a Teacher by username', async () => {
+    describe('Get By Id', () => {
+        it('should return a Teacher by id', async () => {
             //GIVEN
-            const username = 'myusername';
+            const id = '123abc456';
             const searchCriteria = {
-                username: username,
+                _id: id,
                 isActive: true
             };
 
@@ -321,7 +321,7 @@ describe('Teacher Service', function () {
             const expectedResult = new Result(HttpStatus.OK, validTeacher);
 
             //WHEN
-            const result = await teacherService.getByUsername(username);
+            const result = await teacherService.getById(id);
 
             //THEN
             teacherModelMock.verify();
@@ -331,9 +331,9 @@ describe('Teacher Service', function () {
 
         it('should handle Teacher not found', async () => {
             //GIVEN
-            const username = 'myusername';
+            const id = '123abc456';
             const searchCriteria = {
-                username: username,
+                _id: id,
                 isActive: true
             };
 
@@ -348,12 +348,12 @@ describe('Teacher Service', function () {
                 new ErrorMessage(
                     AppStatus.TEACHER_NOT_FOUND,
                     AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
-                    {username: username}
+                    {_id: id}
                 )
             );
 
             //WHEN
-            const result = await teacherService.getByUsername(username);
+            const result = await teacherService.getById(id);
 
             //THEN
             teacherModelMock.verify();
@@ -363,9 +363,9 @@ describe('Teacher Service', function () {
 
         it('should handle generic error', async () => {
             //GIVEN
-            const username = 'myusername';
+            const id = '123abc456';
             const searchCriteria = {
-                username: username,
+                _id: id,
                 isActive: true
             };
             const dbError = {
@@ -394,7 +394,7 @@ describe('Teacher Service', function () {
                 .resolves();
 
             //WHEN
-            const result = await teacherService.getByUsername(username);
+            const result = await teacherService.getById(id);
 
             //THEN
             teacherModelMock.verify();
