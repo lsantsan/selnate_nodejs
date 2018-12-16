@@ -47,6 +47,18 @@ function handleErrors(error) {
     }
 }
 
+function buildTeacherNotFound(id) {
+    const result = new Result();
+    result.status = HttpStatus.NOT_FOUND;
+    result.body = new ErrorMessage(
+        AppStatus.TEACHER_NOT_FOUND,
+        AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
+        {id: id}
+    );
+
+    return result;
+}
+
 const post = async function (request, consumerId) {
     let result = new Result();
 
@@ -92,14 +104,7 @@ const getById = async function (id) {
         });
 
         if (!teacher) {
-            result.status = HttpStatus.NOT_FOUND;
-            result.body = new ErrorMessage(
-                AppStatus.TEACHER_NOT_FOUND,
-                AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
-                {_id: id}
-            );
-
-            return result;
+            return buildTeacherNotFound(id);
         }
         result.status = HttpStatus.OK;
         result.body = teacher;

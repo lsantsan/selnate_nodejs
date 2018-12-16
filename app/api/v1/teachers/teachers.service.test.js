@@ -348,7 +348,7 @@ describe('Teacher Service', function () {
                 new ErrorMessage(
                     AppStatus.TEACHER_NOT_FOUND,
                     AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
-                    {_id: id}
+                    {id: id}
                 )
             );
 
