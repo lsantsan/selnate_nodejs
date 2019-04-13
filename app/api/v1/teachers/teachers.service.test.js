@@ -29,6 +29,25 @@ describe('Teacher Service', function () {
     let teacherModelMock = null;
     let loggerMock = null;
     let bcryptMock = null;
+    const teacherId = '123abc456';
+    const consumerId = 'bacwe1234rty';
+
+    const INTERNAL_ERROR_RESULT = new Result(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        new ErrorMessage(
+            AppStatus.INTERNAL_ERROR,
+            AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
+            {message: _$.GENERIC_ERROR_MESSAGE}
+        )
+    );
+    const TEACHER_NOT_FOUND_RESULT = new Result(
+        HttpStatus.NOT_FOUND,
+        new ErrorMessage(
+            AppStatus.TEACHER_NOT_FOUND,
+            AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
+            {id: teacherId}
+        )
+    );
 
     beforeEach(() => {
         teacherModelMock = sinon.mock(TeacherModel);
@@ -44,7 +63,6 @@ describe('Teacher Service', function () {
         it('should create a new teacher', async () => {
             //GIVEN
             const input = validTeacher;
-            const consumerId = 'bacwe1234rty';
             const teacherObject = Object.assign({}, input);
             teacherObject.password = await bcrypt.hash(teacherObject.password, _$.SALT);
             teacherObject._updatedBy = consumerId;
@@ -126,14 +144,7 @@ describe('Teacher Service', function () {
                 code: 12345
             };
 
-            const expectedResult = new Result(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                new ErrorMessage(
-                    AppStatus.INTERNAL_ERROR,
-                    AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
-                    {message: _$.GENERIC_ERROR_MESSAGE}
-                )
-            );
+            const expectedResult = INTERNAL_ERROR_RESULT;
 
             //mock
             teacherModelMock.expects('create')
@@ -167,14 +178,7 @@ describe('Teacher Service', function () {
                 code: 12345
             };
 
-            const expectedResult = new Result(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                new ErrorMessage(
-                    AppStatus.INTERNAL_ERROR,
-                    AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
-                    {message: _$.GENERIC_ERROR_MESSAGE}
-                )
-            );
+            const expectedResult = INTERNAL_ERROR_RESULT;
 
             //mock
             teacherModelMock.expects('create')
@@ -272,14 +276,7 @@ describe('Teacher Service', function () {
                 err: 'This is a generic error message',
                 code: 12345
             };
-            const expectedResult = new Result(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                new ErrorMessage(
-                    AppStatus.INTERNAL_ERROR,
-                    AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
-                    {message: _$.GENERIC_ERROR_MESSAGE}
-                )
-            );
+            const expectedResult = INTERNAL_ERROR_RESULT;
 
             //mock
             teacherModelMock.expects('find')
@@ -304,11 +301,10 @@ describe('Teacher Service', function () {
     });
 
     describe('Get By Id', () => {
-        it('should return a Teacher by id', async () => {
+        it('should return a Teacher by teacherId', async () => {
             //GIVEN
-            const id = '123abc456';
             const searchCriteria = {
-                _id: id,
+                _id: teacherId,
                 isActive: true
             };
 
@@ -321,7 +317,7 @@ describe('Teacher Service', function () {
             const expectedResult = new Result(HttpStatus.OK, validTeacher);
 
             //WHEN
-            const result = await teacherService.getById(id);
+            const result = await teacherService.getById(teacherId);
 
             //THEN
             teacherModelMock.verify();
@@ -331,9 +327,8 @@ describe('Teacher Service', function () {
 
         it('should handle Teacher not found', async () => {
             //GIVEN
-            const id = '123abc456';
             const searchCriteria = {
-                _id: id,
+                _id: teacherId,
                 isActive: true
             };
 
@@ -343,17 +338,10 @@ describe('Teacher Service', function () {
                 .withExactArgs(searchCriteria)
                 .resolves(null);
 
-            const expectedResult = new Result(
-                HttpStatus.NOT_FOUND,
-                new ErrorMessage(
-                    AppStatus.TEACHER_NOT_FOUND,
-                    AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
-                    {id: id}
-                )
-            );
+            const expectedResult = TEACHER_NOT_FOUND_RESULT;
 
             //WHEN
-            const result = await teacherService.getById(id);
+            const result = await teacherService.getById(teacherId);
 
             //THEN
             teacherModelMock.verify();
@@ -363,9 +351,8 @@ describe('Teacher Service', function () {
 
         it('should handle generic error', async () => {
             //GIVEN
-            const id = '123abc456';
             const searchCriteria = {
-                _id: id,
+                _id: teacherId,
                 isActive: true
             };
             const dbError = {
@@ -373,14 +360,8 @@ describe('Teacher Service', function () {
                 err: 'This is a generic error message',
                 code: 12345
             };
-            const expectedResult = new Result(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                new ErrorMessage(
-                    AppStatus.INTERNAL_ERROR,
-                    AppStatus.getStatusText(AppStatus.INTERNAL_ERROR),
-                    {message: _$.GENERIC_ERROR_MESSAGE}
-                )
-            );
+
+            const expectedResult = INTERNAL_ERROR_RESULT;
 
             //mock
             teacherModelMock.expects('findOne')
@@ -394,7 +375,7 @@ describe('Teacher Service', function () {
                 .resolves();
 
             //WHEN
-            const result = await teacherService.getById(id);
+            const result = await teacherService.getById(teacherId);
 
             //THEN
             teacherModelMock.verify();
@@ -404,4 +385,129 @@ describe('Teacher Service', function () {
         })
 
     });
+
+    describe('Update By Id', () => {
+        const searchCriteria = {
+            _id: teacherId
+        };
+        const requestBody = Object.assign({}, validTeacher);
+
+        it('should update a Teacher by teacherId', async () => {
+            //GIVEN
+            requestBody.password = '';
+            requestBody.lastName = 'differentLastname';
+
+            const updatedObj = Object.assign({}, requestBody);
+            updatedObj._updatedBy = consumerId;
+
+            //mock
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .resolves(validTeacher);
+            teacherModelMock.expects('findOneAndUpdate')
+                .once()
+                .withExactArgs(searchCriteria, updatedObj, sinon.match.object)
+                .resolves(updatedObj);
+
+            const expectedResult = new Result(HttpStatus.OK, updatedObj);
+
+            //WHEN
+            const result = await teacherService.updateById(teacherId, requestBody, consumerId);
+
+            //THEN
+            teacherModelMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it('should update a Teacher password by teacherId', async () => {
+            //GIVEN
+            const encryptedPassword = 'asbasd234adfavaf';
+            requestBody.password = 'D!ff3r3ntP@$$wr0d';
+
+            const updatedObj = Object.assign({}, requestBody);
+            updatedObj._updatedBy = consumerId;
+            updatedObj.password = encryptedPassword;
+
+            //mock
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .resolves(validTeacher);
+            teacherModelMock.expects('findOneAndUpdate')
+                .once()
+                .withExactArgs(searchCriteria, updatedObj, sinon.match.object)
+                .resolves(updatedObj);
+            bcryptMock.expects('hash')
+                .once()
+                .withExactArgs(requestBody.password, _$.SALT)
+                .resolves(encryptedPassword);
+
+            const expectecResult = new Result(HttpStatus.OK, updatedObj);
+
+            //WHEN
+            const result = await teacherService.updateById(teacherId, requestBody, consumerId);
+
+            //THEN
+            teacherModelMock.verify();
+            bcryptMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectecResult);
+        });
+
+        it('should handle Teacher not found', async () => {
+            //mock
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .resolves(null);
+            teacherModelMock.expects('findOneAndUpdate')
+                .never();
+
+            const expectedResult = TEACHER_NOT_FOUND_RESULT;
+
+            //WHEN
+            const result = await teacherService.updateById(teacherId, requestBody, consumerId);
+
+            //THEN
+            teacherModelMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it('should handle invalid Teacher data', async () => {
+            //GIVEN
+            requestBody.password = '';
+
+            const updatedObj = Object.assign({}, requestBody);
+            updatedObj._updatedBy = consumerId;
+
+            //mock
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .resolves(validTeacher);
+            teacherModelMock.expects('findOneAndUpdate')
+                .once()
+                .withExactArgs(searchCriteria, updatedObj, sinon.match.object)
+                .resolves(null);
+
+            const expectedResult = new Result(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                new ErrorMessage(
+                    AppStatus.INVALID_TEACHER_DATA,
+                    AppStatus.getStatusText(AppStatus.INVALID_TEACHER_DATA),
+                    {id: teacherId}
+                )
+            );
+            //WHEN
+            const result = await teacherService.updateById(teacherId, requestBody, consumerId);
+
+            //THEN
+            teacherModelMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        })
+    })
 });

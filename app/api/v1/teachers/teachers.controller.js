@@ -31,4 +31,12 @@ router.get('/:id', VerifyToken, function (req, res) {
         });
 });
 
+router.put('/:id', VerifyToken, function (req, res) {
+    teachersService.updateById(req.params.id, req.body, req.consumerId)
+        .then(result => {
+            res.status(result.status)
+                .send(result.body);
+        });
+});
+
 module.exports = router;

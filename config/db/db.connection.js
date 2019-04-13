@@ -26,12 +26,6 @@ const connect = function (dbConfig) {
     });
 };
 
-// If the connection throws an error
-/*mongoose.connection.on('error', function (err) {
-    logger.error('error EVENT HAPPENED!');
-    logger.error(err);
-});*/
-
 // When the connection is disconnected
 mongoose.connection.on('disconnected', function () {
     logger.info('Database is disconnected.');

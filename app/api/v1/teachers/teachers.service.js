@@ -47,16 +47,28 @@ function handleErrors(error) {
     }
 }
 
-function buildTeacherNotFound(id) {
+function buildTeacherNotFound(teacherId) {
     const result = new Result();
     result.status = HttpStatus.NOT_FOUND;
     result.body = new ErrorMessage(
         AppStatus.TEACHER_NOT_FOUND,
         AppStatus.getStatusText(AppStatus.TEACHER_NOT_FOUND),
-        {id: id}
+        {id: teacherId}
     );
 
     return result;
+}
+
+function buildInvalidTeacherData(teacherId) {
+    const result = new Result();
+    result.status = HttpStatus.UNPROCESSABLE_ENTITY;
+    result.body = new ErrorMessage(
+        AppStatus.INVALID_TEACHER_DATA,
+        AppStatus.getStatusText(AppStatus.INVALID_TEACHER_DATA),
+        {id: teacherId}
+    );
+
+    return result
 }
 
 const post = async function (request, consumerId) {
@@ -94,17 +106,17 @@ const getAll = async function () {
     return result;
 };
 
-const getById = async function (id) {
+const getById = async function (teacherId) {
     let result = new Result();
 
     try {
         const teacher = await TeacherModel.findOne({
-            _id: id,
+            _id: teacherId,
             isActive: true
         });
 
         if (!teacher) {
-            return buildTeacherNotFound(id);
+            return buildTeacherNotFound(teacherId);
         }
         result.status = HttpStatus.OK;
         result.body = teacher;
@@ -116,10 +128,46 @@ const getById = async function (id) {
     return result;
 };
 
+const updateById = async function (teacherId, request, consumerId) {
+    let result = new Result();
+
+    try {
+        const searchCriteria = {_id: teacherId};
+        const teacher = await TeacherModel.findOne(searchCriteria);
+
+        if (!teacher) {
+            return buildTeacherNotFound(teacherId);
+        }
+
+        if (request.password) {
+            request.password = await bcrypt.hash(request.password, _$.SALT);
+        }
+        request._updatedBy = consumerId;
+
+        const body = await TeacherModel.findOneAndUpdate(searchCriteria, request, {
+            runValidators: true,
+            new: true
+        });
+
+        if (!body) {
+            return buildInvalidTeacherData(teacherId);
+        }
+
+        result.status = HttpStatus.OK;
+        result.body = body;
+    }
+    catch (error) {
+        result = handleErrors(error);
+    }
+
+    return result;
+};
+
 module.exports = {
     post: post,
     getAll: getAll,
-    getById: getById
+    getById: getById,
+    updateById: updateById
 };
 
 
