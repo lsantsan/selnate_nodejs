@@ -86,7 +86,7 @@ describe('Teacher Service', function () {
                 .resolves(dbResult);
 
             //WHEN
-            const result = await teacherService.post(input, consumerId);
+            const result = await teacherService.createTeacher(input, consumerId);
 
             //THEN
             bcryptMock.verify();
@@ -125,7 +125,7 @@ describe('Teacher Service', function () {
                 .resolves();
 
             //WHEN
-            const result = await teacherService.post(req);
+            const result = await teacherService.createTeacher(req);
 
             //THEN
             teacherModelMock.verify();
@@ -158,7 +158,7 @@ describe('Teacher Service', function () {
                 .resolves();
 
             //WHEN
-            const result = await teacherService.post(req);
+            const result = await teacherService.createTeacher(req);
 
             //THEN
             teacherModelMock.verify();
@@ -192,7 +192,7 @@ describe('Teacher Service', function () {
                 .resolves();
 
             //WHEN
-            const result = await teacherService.post(req);
+            const result = await teacherService.createTeacher(req);
 
             //THEN
             teacherModelMock.verify();
@@ -236,7 +236,7 @@ describe('Teacher Service', function () {
                 .resolves();
 
             //WHEN
-            const result = await teacherService.post(req);
+            const result = await teacherService.createTeacher(req);
 
             //THEN
             teacherModelMock.verify();

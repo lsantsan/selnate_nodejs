@@ -71,7 +71,7 @@ function buildInvalidTeacherData(teacherId) {
     return result
 }
 
-const post = async function (request, consumerId) {
+const createTeacher = async function (request, consumerId) {
     let result = new Result();
 
     try {
@@ -164,7 +164,7 @@ const updateById = async function (teacherId, request, consumerId) {
 };
 
 module.exports = {
-    post: post,
+    createTeacher: createTeacher,
     getAll: getAll,
     getById: getById,
     updateById: updateById
