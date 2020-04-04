@@ -15,7 +15,11 @@ const connect = function (dbConfig) {
 
     return new Promise((resolve, reject) => {
         logger.info('Connecting to MongoDb...');
-        mongoose.connect(uri)
+        mongoose.connect(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true
+        })
             .then(() => {
                 resolve(true)
             })
