@@ -28,7 +28,7 @@
     "mongoose": "^5.0.9",
     "mongoose-history": "^0.8.0",
     "morgan": "^1.9.1",
-    "npm": "^5.7.1",
+    "npm": "^6.13.4",
     "winston": "^2.4.1",
     "winston-log-and-exit": "^1.0.6"
   },
