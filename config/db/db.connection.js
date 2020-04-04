@@ -18,7 +18,8 @@ const connect = function (dbConfig) {
         mongoose.connect(uri, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useCreateIndex: true
+            useCreateIndex: true,
+            useFindAndModify: false
         })
             .then(() => {
                 resolve(true)

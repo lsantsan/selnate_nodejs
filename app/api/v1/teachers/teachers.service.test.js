@@ -509,5 +509,64 @@ describe('Teacher Service', function () {
             assert.isObject(result);
             assert.deepEqual(result, expectedResult);
         })
-    })
+    });
+    describe('Delete By Id', function () {
+
+        it('should delete an existing teacher', async () => {
+            //GIVEN
+            const searchCriteria = {
+                _id: teacherId
+            };
+            const teacherObject = Object.assign({}, validTeacher);
+            teacherObject.isActive = false;
+            teacherObject._updatedBy = consumerId;
+
+            const expectedResult = new Result(HttpStatus.NO_CONTENT, {});
+
+            //mocks
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .resolves(validTeacher);
+
+            teacherModelMock.expects('findOneAndUpdate')
+                .once()
+                .withExactArgs(searchCriteria, teacherObject, {runValidators: true})
+                .resolves(null);
+
+            //WHEN
+            const result = await teacherService.deleteById(teacherId, consumerId);
+
+            //THEN
+            teacherModelMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it('should not delete a unknown teacher', async () => {
+            //GIVEN
+            const searchCriteria = {
+                _id: teacherId
+            };
+
+            const expectedResult = TEACHER_NOT_FOUND_RESULT;
+
+            //mocks
+            teacherModelMock.expects('findOne')
+                .once()
+                .withExactArgs(searchCriteria)
+                .resolves(null);
+
+            teacherModelMock.expects('findOneAndUpdate')
+                .never();
+
+            //WHEN
+            const result = await teacherService.deleteById(teacherId, consumerId);
+
+            //THEN
+            teacherModelMock.verify();
+            assert.isObject(result);
+            assert.deepEqual(result, expectedResult);
+        });
+    });
 });
