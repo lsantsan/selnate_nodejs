@@ -116,7 +116,7 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        '204':
           description: Successful operation.
         '404':
           description: Teacher not found.

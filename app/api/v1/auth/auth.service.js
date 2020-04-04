@@ -59,8 +59,7 @@ const post = async function (request, jwtSecret) {
             token: token
         };
 
-    }
-    catch (error) {
+    } catch (error) {
         logger.error(error);
         result = handleErrors(error);
     }

@@ -12,6 +12,8 @@ statusCodes[exports.LOGIN_NOT_VALID = 'APP-104'] = 'Login not valid.';
 statusCodes[exports.TOKEN_NOT_FOUND = 'APP-105'] = 'Token not found.';
 statusCodes[exports.TOKEN_EXPIRED = 'APP-106'] = 'Token has expired.';
 statusCodes[exports.INVALID_TEACHER_DATA = 'APP-107'] = 'Invalid teacher data';
+statusCodes[exports.CONSUMER_NOT_FOUND = 'APP-108'] = 'Consumer not found';
+statusCodes[exports.CONSUMER_FORBIDDEN = 'APP-109'] = 'Consumer does not have enough privileges.';
 statusCodes[exports.INTERNAL_ERROR = 'APP-999'] = 'Internal error.';
 
 

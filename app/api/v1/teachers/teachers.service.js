@@ -83,8 +83,7 @@ const createTeacher = async function (request, consumerId) {
 
         result.status = HttpStatus.OK;
         result.body = body;
-    }
-    catch (error) {
+    } catch (error) {
         result = handleErrors(error);
     }
 
@@ -155,19 +154,46 @@ const updateById = async function (teacherId, request, consumerId) {
 
         result.status = HttpStatus.OK;
         result.body = body;
-    }
-    catch (error) {
+    } catch (error) {
         result = handleErrors(error);
     }
 
     return result;
 };
 
+const deleteById = async function (teacherId, consumerId) {
+    let result = new Result();
+
+    try {
+        const searchCriteria = {_id: teacherId};
+        const teacher = await TeacherModel.findOne(searchCriteria);
+        if (!teacher) {
+            return buildTeacherNotFound(teacherId);
+        }
+
+        teacher.isActive = false;
+        teacher._updatedBy = consumerId;
+        await TeacherModel.findOneAndUpdate(searchCriteria, teacher, {
+            runValidators: true
+        });
+
+        result.status = HttpStatus.NO_CONTENT;
+        result.body = {};
+
+    } catch (error) {
+        result = handleErrors(error);
+    }
+
+    return result;
+};
+
+
 module.exports = {
     createTeacher: createTeacher,
     getAll: getAll,
     getById: getById,
-    updateById: updateById
+    updateById: updateById,
+    deleteById: deleteById
 };
 
 
